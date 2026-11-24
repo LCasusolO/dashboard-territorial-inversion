@@ -176,7 +176,8 @@
 
   function excerpt(value) {
     if (!value) return '';
-    const line = value.split('\n').find(part => part.trim().length > 43) || value;
+    const line = value.split('\n').map(part => part.trim())
+      .find(part => part.length > 43 && !part.endsWith(':')) || value;
     if (line.length <= 182) return line;
     const boundary = line.lastIndexOf(' ', 180);
     return line.slice(0, boundary > 120 ? boundary : 180) + '…';
