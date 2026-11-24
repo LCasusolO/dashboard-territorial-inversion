@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Consulta territorial de las brechas, potencialidades y carteras de inversión de cinco regiones fronterizas del Perú.">
+  <title>Inversión fronteriza | Atlas territorial</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="map.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Ir al contenido</a>
+  <header class="top">
+    <div class="shell top-inner">
+      <a class="brand" href="#"><span class="brand-icon" aria-hidden="true">✦</span> Atlas territorial</a>
+      <nav aria-label="Secciones">
+        <a href="#territorio">Territorio</a><a href="#cartera">Cartera</a><a href="#registros">Registros</a>
+      </nav>
+      <button id="export-top" type="button" class="button">Exportar base</button>
+    </div>
+  </header>
+  <main id="contenido" class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow"><span aria-hidden="true"></span> Perú · Planificación territorial</p>
+        <h1>Inversión fronteriza</h1>
+        <p>Explora brechas, potencialidades y paquetes de inversión de cinco regiones fronterizas.</p>
+      </div>
+      <div class="region-control"><label for="region">Región de consulta</label><select id="region"></select></div>
+    </header>
+    <noscript><p>Activa JavaScript para consultar el mapa y editar los registros.</p></noscript>
+    <p id="app-message" role="status" class="status" hidden></p>
+
+    <section aria-label="Indicadores de la vista territorial" class="metrics">
+      <div><span>Códigos en cartera</span><strong id="kpi-total">—</strong></div>
+      <div><span>CUI</span><strong id="kpi-cui">—</strong></div>
+      <div><span>Códigos de Idea</span><strong id="kpi-idea">—</strong></div>
+      <div><span>SNIP</span><strong id="kpi-snip">—</strong></div>
+    </section>
+
+    <section id="territorio" class="territory" aria-label="Exploración territorial">
+      <section class="card map-card">
+        <div class="card-head"><div><p class="eyebrow">Mapa del Perú</p><h2>Selecciona una región</h2></div><button id="map-reset" class="button quiet" type="button">Ver todas</button></div>
+        <div id="map"></div>
+        <p id="map-source" class="map-source"></p>
+      </section>
+      <section class="card profile" aria-labelledby="profile-title">
+        <div class="card-head"><div><p class="eyebrow">Ficha territorial</p><h2 id="profile-title" aria-live="polite"></h2></div><button id="edit-profile" class="button quiet" type="button">Editar ficha</button></div>
+        <div id="profile"></div>
+      </section>
+    </section>
+
+    <section id="cartera" class="portfolio" aria-label="Cartera de inversión">
+      <section class="card">
+        <p class="eyebrow">Panorama general</p><h2>Comparativo regional</h2>
+        <p class="muted">Registros por código en la base consolidada.</p>
+        <div id="comparison"></div>
+      </section>
+      <section class="card">
+        <p class="eyebrow">Vista territorial</p><h2>Fases de inversión</h2>
+        <p class="muted" id="phase-context"></p>
+        <div id="phases"></div>
+      </section>
+      <section class="card package-card">
+        <div class="card-head"><div><p class="eyebrow">Cartera de inversión</p><h2>Paquetes y brechas pendientes</h2></div></div>
+        <div class="package-layout"><div id="packages"></div><div id="package-detail"></div></div>
+      </section>
+    </section>
+
+    <section id="registros" class="card records" aria-labelledby="records-title">
+      <div class="card-head"><div><p class="eyebrow">Base consolidada</p><h2 id="records-title">Registros de inversión</h2></div><button id="export-records" class="button quiet" type="button">Exportar base</button></div>
+      <div class="filter-grid">
+        <div><label for="search">Buscar por código</label><input id="search" type="search" placeholder="CUI, Idea o SNIP" autocomplete="off"></div>
+        <div><label for="municipality">Municipalidad</label><select id="municipality"></select></div>
+        <div><label for="phase">Fase del ciclo</label><select id="phase"></select></div>
+        <div><label for="type">Tipo de código</label><select id="type"></select></div>
+      </div>
+      <div class="results-head"><p id="results-count" role="status"></p><button id="clear-filters" type="button" class="button quiet">Limpiar filtros</button></div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de registros">
+        <table>
+          <caption class="visually-hidden">Registros de inversión según los filtros activos</caption>
+          <thead><tr><th scope="col">Código</th><th scope="col">Tipo</th><th scope="col">Municipalidad</th><th scope="col">Inversión en la fuente</th><th scope="col">Fase</th><th scope="col">Acciones</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="pager" aria-label="Páginas de registros"><button id="prev" type="button" class="button quiet">Anterior</button><span id="page"></span><button id="next" type="button" class="button quiet">Siguiente</button></div>
+      <p class="muted local-note">Las ediciones se guardan en este navegador. Exporta una copia para conservarlas o compartirlas.</p>
+    </section>
+  </main>
+  <footer class="shell footer">Fuente de cartera · Base consolidada de paquetes de inversión</footer>
+
+  <dialog id="editor" aria-labelledby="editor-title">
+    <form id="editor-form">
+      <header class="dialog-head"><h2 id="editor-title"></h2><button type="button" data-close class="button quiet">Cerrar</button></header>
+      <p id="editor-note" class="muted"></p>
+      <div id="editor-fields"></div>
+      <p id="editor-status" role="status" class="muted"></p>
+      <footer class="dialog-foot"><button type="button" data-close class="button quiet">Cancelar</button><button id="save" type="submit" class="button primary">Guardar cambios</button></footer>
+    </form>
+  </dialog>
+  <dialog id="exports" aria-labelledby="export-title">
+    <header class="dialog-head"><h2 id="export-title">Exportar base</h2><button type="button" data-close class="button quiet">Cerrar</button></header>
+    <p>Descarga los registros completos con las ediciones de este navegador.</p>
+    <div class="dialog-foot"><button id="export-csv" type="button" class="button primary">Descargar CSV</button><button id="export-json" type="button" class="button">Descargar JSON</button></div>
+    <details class="import"><summary>Importar ediciones desde JSON</summary><p>Recupera una copia exportada. Su contenido reemplazará las ediciones locales al confirmar.</p><label for="import-json">Copia JSON del dashboard</label><input type="file" id="import-json" accept=".json,application/json"><button id="import-confirm" class="button" type="button">Aplicar copia</button><p id="import-status" role="status"></p></details>
+  </dialog>
+</body>
+</html>
