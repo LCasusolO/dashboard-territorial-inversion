@@ -133,7 +133,6 @@ dialog::backdrop { background: #10271fa8; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 /* Comparison and record explorer use the same accent as the territorial map. */
-.cross-note { color: var(--quiet); margin: .15rem 0 1rem; }
 .cross-metric-title { font-size: 1.15rem; margin: .75rem 0 .65rem; }
 #cruce .metrics > article { border: 1px solid var(--line); background: var(--paper); border-radius: 13px; padding: .9rem 1rem; min-width: 0; }
 #cruce .metrics h3 { color: var(--quiet); font-weight: 700; font-size: .9rem; margin: 0; }
@@ -197,7 +196,6 @@ dialog::backdrop { background: #10271fa8; }
     <article><h3>Cartera no elegible</h3><strong id="cross-no"></strong></article>
     <article><h3>Proporción elegible</h3><strong id="cross-rate"></strong></article>
   </div>
-  <p class="cross-note" id="cross-note" aria-live="polite"></p>
   <h2 class="cross-metric-title">Costo actualizado de las inversiones</h2>
   <div class="metrics cross-money" aria-label="Costo actualizado en soles">
     <article><h3>Costo de la cartera total</h3><strong id="cross-cost-total"></strong></article>
@@ -205,7 +203,6 @@ dialog::backdrop { background: #10271fa8; }
     <article><h3>Costo de la cartera no elegible</h3><strong id="cross-cost-no"></strong></article>
     <article><h3>Participación elegible en el costo</h3><strong id="cross-cost-rate"></strong></article>
   </div>
-  <p id="cross-cost-note" class="cross-note"></p>
 </section>
     <section id="territorio" class="territory" aria-label="Exploración territorial">
       <section class="card map-card">
@@ -860,8 +857,6 @@ window.CROSS_DATA={"headers":["Código Único","Nombre de inversión","Elegibili
     const linked = linkedEntries.length;
     const universeCost = cost(local);
     const matrixCost = cost(linkedEntries);
-    const uniqueCui = new Set(local.map(([record]) => record[0]).filter(Boolean).map(String)).size;
-    const ideaOnly = local.filter(([record]) => !record[0] && record[ideaIndex]).length;
     $('cross-total').textContent = format(local.length);
     $('cross-yes').textContent = format(linked);
     $('cross-no').textContent = format(local.length - linked);
@@ -870,8 +865,6 @@ window.CROSS_DATA={"headers":["Código Único","Nombre de inversión","Elegibili
     $('cross-cost-yes').textContent = soles(matrixCost);
     $('cross-cost-no').textContent = soles(universeCost - matrixCost);
     $('cross-cost-rate').textContent = percent(matrixCost, universeCost);
-    $('cross-note').textContent = `${region || 'Cinco regiones'} · ${format(uniqueCui)} CUI únicos y ${format(ideaOnly)} ideas sin CUI. La base contiene ${format(sourceRows.length)} filas.`;
-    $('cross-cost-note').textContent = `Los montos suman un costo actualizado por inversión. ${format(local.filter(entry => entry[3] === null).length)} inversiones únicas sin costo informado.`;
 
     $('cross-regions').replaceChildren(...Object.keys(matrix.scopes).map(name => {
       const group = uniqueInvestments(regionalRows(name));
